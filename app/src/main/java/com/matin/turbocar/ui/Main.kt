@@ -1,0 +1,66 @@
+package com.matin.turbocar.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+
+@Composable
+fun Main(modifier: Modifier = Modifier) {
+    val configuration = LocalConfiguration.current
+    val screenWidthPx = dpToPx(configuration.screenWidthDp.dp)
+    val coroutineScope = remember { CoroutineScope(Dispatchers.IO) }
+
+    val playerLogic = remember { PlayerLogic(coroutineScope, screenWidthPx) }
+    val playerPosition = playerLogic.playerPosition.collectAsState()
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures { offset ->
+                    val direction =
+                        if (offset.x < (screenWidthPx / 2)) Direction.LEFT else Direction.RIGHT
+                    playerLogic.move(direction)
+                }
+            },
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Box(
+            modifier = Modifier
+                .offset { IntOffset(x = playerPosition.value.x, y = 0) }
+                .padding(bottom = 20.dp)
+                .size(40.dp)
+                .background(color = Color.Red)
+        )
+    }
+}
+
+enum class Direction {
+    LEFT,
+    RIGHT
+}
+
+@Composable
+fun dpToPx(dp: Dp): Float {
+    val density = LocalDensity.current
+    return with(density) { dp.toPx() }
+}
+
