@@ -12,27 +12,32 @@ import kotlin.math.roundToInt
 class PlayerLogic(private val scope: CoroutineScope, private val screenWidthPx: Float) {
     private val _playerPosition = MutableStateFlow(Player(0))
     val playerPosition = _playerPosition.asStateFlow()
-    private val screenEdge = screenWidthPx.roundToInt() / 2
+    private val movementSpace = screenWidthPx.roundToInt() / 2
+    private val movementEdge = (movementSpace * MOVEMENT_EDGE_RATIO).roundToInt()
 
-    private val acceleration = flow {
-        var accelerate = 40
-        repeat(3) {
-            delay(100)
-            accelerate *= (it + 1)
-            emit(accelerate)
+    private val movement = flow {
+        val stepPercents = listOf(0.1, 0.2, 0.4) // Total is 0.7 or 70%
+        stepPercents.forEach { stepPercent ->
+            delay(MOVEMENT_DELAY_MS)
+            emit((stepPercent * movementSpace).toInt())
         }
     }
 
     fun move(direction: Direction) {
         scope.launch {
-            acceleration.collect { acceleration ->
+            movement.collect { movement ->
                 val newPosition =
-                    (_playerPosition.value.x + acceleration * direction.value).coerceIn(
-                        -screenEdge,
-                        screenEdge
+                    (_playerPosition.value.x + movement * direction.value).coerceIn(
+                        -movementEdge,
+                        movementEdge
                     )
                 _playerPosition.update { it.copy(x = newPosition) }
             }
         }
+    }
+
+    companion object {
+        const val MOVEMENT_EDGE_RATIO = .7
+        const val MOVEMENT_DELAY_MS = 100L
     }
 }
