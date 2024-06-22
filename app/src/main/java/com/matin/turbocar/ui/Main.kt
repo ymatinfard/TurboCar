@@ -2,11 +2,8 @@ package com.matin.turbocar.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,7 +20,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.matin.turbocar.Block
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -44,23 +40,6 @@ fun Main(modifier: Modifier = Modifier) {
         Block(modifier, blockPosition, Direction.RIGHT)
         Player(modifier, screenWidthPx, playerLogic, playerPosition)
     }
-}
-
-@Composable
-fun Block(modifier: Modifier, blockPosition: State<Block>, direction: Direction) {
-    println(blockPosition.value)
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = if (direction == Direction.RIGHT) Arrangement.End else Arrangement.Start
-    ) {
-        Box(
-            modifier
-                .offset { IntOffset(y = blockPosition.value.y, x = 0) }
-                .size(width = 90.dp, height = 30.dp)
-                .background(color = Color.Black)
-        )
-    }
-
 }
 
 @Composable
@@ -92,9 +71,9 @@ private fun Player(
     }
 }
 
-enum class Direction {
-    LEFT,
-    RIGHT
+enum class Direction(val value: Int) {
+    LEFT(-1),
+    RIGHT(1)
 }
 
 @Composable

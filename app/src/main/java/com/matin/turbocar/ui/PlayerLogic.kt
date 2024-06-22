@@ -4,32 +4,35 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class PlayerLogic(val scope: CoroutineScope, private val screenWidthPx: Float) {
+class PlayerLogic(private val scope: CoroutineScope, private val screenWidthPx: Float) {
     private val _playerPosition = MutableStateFlow(Player(0))
     val playerPosition = _playerPosition.asStateFlow()
+    private val screenEdge = screenWidthPx.roundToInt() / 2
 
-    fun move(direction: Direction) {
-        val offset = when (direction) {
-            Direction.LEFT -> -DEFAULT_OFFSET
-            Direction.RIGHT -> DEFAULT_OFFSET
-        }
-
-        scope.launch {
-            repeat(3) {
-                val screenHalf = screenWidthPx.roundToInt() / 2
-                val newPosition =
-                    (_playerPosition.value.x + offset).coerceIn(-screenHalf, screenHalf)
-                _playerPosition.update { it.copy(x = newPosition) }
-                delay(100)
-            }
+    private val acceleration = flow {
+        var accelerate = 40
+        repeat(3) {
+            delay(100)
+            accelerate *= (it + 1)
+            emit(accelerate)
         }
     }
 
-    companion object {
-        const val DEFAULT_OFFSET = 100
+    fun move(direction: Direction) {
+        scope.launch {
+            acceleration.collect { acceleration ->
+                val newPosition =
+                    (_playerPosition.value.x + acceleration * direction.value).coerceIn(
+                        -screenEdge,
+                        screenEdge
+                    )
+                _playerPosition.update { it.copy(x = newPosition) }
+            }
+        }
     }
 }
