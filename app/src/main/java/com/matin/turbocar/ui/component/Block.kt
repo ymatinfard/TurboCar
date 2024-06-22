@@ -1,4 +1,4 @@
-package com.matin.turbocar.ui
+package com.matin.turbocar.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,19 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.matin.turbocar.Block
+import com.matin.turbocar.ui.Direction
+import com.matin.turbocar.ui.model.Block
+import com.matin.turbocar.ui.toDp
 
 @Composable
-fun Block(modifier: Modifier, blockPosition: State<Block>, direction: Direction) {
-    println(blockPosition.value)
+fun Block(modifier: Modifier, block: State<Block>, direction: Direction) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = if (direction == Direction.RIGHT) Arrangement.End else Arrangement.Start
     ) {
         Box(
             modifier
-                .offset { IntOffset( x = 0, y = blockPosition.value.y) }
-                .size(width = 90.dp, height = 30.dp)
+                .offset { IntOffset(x = 0, y = block.value.y.toInt()) }
+                .size(
+                    width = (block.value.endX - block.value.startX).toDp(),
+                    height = 40.dp
+                )
                 .background(color = Color.Black)
         )
     }

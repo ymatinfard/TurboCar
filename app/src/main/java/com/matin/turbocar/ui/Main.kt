@@ -1,73 +1,76 @@
 package com.matin.turbocar.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.matin.turbocar.ui.component.Block
+import com.matin.turbocar.ui.component.Player
+import com.matin.turbocar.ui.engin.gameCoroutineScope
+import com.matin.turbocar.ui.logic.BlockLogic
+import com.matin.turbocar.ui.logic.PlayerCollisionLogic
+import com.matin.turbocar.ui.logic.PlayerLogic
+import com.matin.turbocar.ui.logic.TimerLogic
+import com.matin.turbocar.ui.model.ViewPort
+import com.matin.turbocar.ui.model.toPx
 
 @Composable
 fun Main(modifier: Modifier = Modifier) {
-    val configuration = LocalConfiguration.current
-    val screenWidthPx = dpToPx(configuration.screenWidthDp.dp)
-    val screenHeightPx = dpToPx(configuration.screenHeightDp.dp)
-    val coroutineScope = remember { CoroutineScope(Dispatchers.IO) }
+    BoxWithConstraints(modifier = Modifier.background(color = Color.Cyan)) {
+        val viewPort = ViewPort(maxWidth.toPx(), maxHeight.toPx())
+        val coroutineScope = remember { gameCoroutineScope() }
+        val blockSize = 200.dp.toPx()
+        val playerSize = com.matin.turbocar.ui.model.Size(20.dp.toPx(), 20.dp.toPx())
 
-    val playerLogic = remember { PlayerLogic(coroutineScope, screenWidthPx) }
-    val blockLogic = remember { BlockLogic(coroutineScope, screenHeightPx) }
-    val playerPosition = playerLogic.playerPosition.collectAsState()
-    val blockPosition = blockLogic.blockPosition.collectAsState()
+        val timerLogic = remember { TimerLogic() }
+        val playerLogic =
+            remember {
+                PlayerLogic(
+                    coroutineScope,
+                    viewPort,
+                    playerSize
+                )
+            }
+        val blockLogic =
+            remember {
+                BlockLogic(
+                    coroutineScope,
+                    timerLogic,
+                    viewPort,
+                    blockSize
+                )
+            }
+        val collisionLogic = remember {
+            PlayerCollisionLogic(
+                playerLogic,
+                blockLogic,
+                timerLogic,
+                coroutineScope
+            )
+        }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Block(modifier, blockPosition, Direction.LEFT)
-        Block(modifier, blockPosition, Direction.RIGHT)
-        Player(modifier, screenWidthPx, playerLogic, playerPosition)
-    }
-}
+        val playerPosition = playerLogic.player.collectAsState()
+        val blockPosition = blockLogic.block.collectAsState()
+        val isCollisionHappened = collisionLogic.collisionHappened.collectAsState()
 
-@Composable
-private fun Player(
-    modifier: Modifier,
-    screenWidthPx: Float,
-    playerLogic: PlayerLogic,
-    playerPosition: State<Player>,
-) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures { offset ->
-                    val direction =
-                        if (offset.x < (screenWidthPx / 2)) Direction.LEFT else Direction.RIGHT
-                    playerLogic.move(direction)
-                }
-            },
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Box(
-            modifier = Modifier
-                .offset { IntOffset(x = playerPosition.value.x, y = 0) }
-                .padding(bottom = 20.dp)
-                .size(40.dp)
-                .background(color = Color.Red)
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Block(modifier, blockPosition, Direction.LEFT)
+            Player(
+                modifier,
+                viewPort,
+                playerLogic,
+                playerPosition,
+                isCollisionHappened,
+            )
+        }
     }
 }
 
@@ -77,8 +80,5 @@ enum class Direction(val value: Int) {
 }
 
 @Composable
-fun dpToPx(dp: Dp): Float {
-    val density = LocalDensity.current
-    return with(density) { dp.toPx() }
-}
+fun Float.toDp(): Dp = with(LocalDensity.current) { this@toDp.toDp() }
 
