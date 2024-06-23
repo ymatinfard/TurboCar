@@ -18,19 +18,25 @@ import com.matin.turbocar.ui.model.Block
 import com.matin.turbocar.ui.toDp
 
 @Composable
-fun Block(modifier: Modifier, block: State<Block>, direction: Direction) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = if (direction == Direction.RIGHT) Arrangement.End else Arrangement.Start
-    ) {
-        Box(
-            modifier
-                .offset { IntOffset(x = 0, y = block.value.y.toInt()) }
-                .size(
-                    width = (block.value.endX - block.value.startX).toDp(),
-                    height = 40.dp
-                )
-                .background(color = Color.Black)
-        )
+fun Block(modifier: Modifier, blocks: State<List<Block>>) {
+    blocks.value.forEach { block ->
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = when (block.direction) {
+                Direction.LEFT -> Arrangement.Start
+                Direction.CENTER -> Arrangement.Center
+                Direction.RIGHT -> Arrangement.End
+            },
+        ) {
+            Box(
+                modifier
+                    .offset { IntOffset(x = 0, y = block.y.toInt()) }
+                    .size(
+                        width = (block.endX - block.startX).toDp(),
+                        height = 40.dp
+                    )
+                    .background(color = Color.Black)
+            )
+        }
     }
 }

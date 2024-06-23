@@ -11,21 +11,23 @@ class PlayerCollisionLogic(
     private val timerLogic: TimerLogic,
     private val scope: CoroutineScope,
 ) {
-
-    val _collisionHappend = MutableStateFlow(false)
-    val collisionHappened = _collisionHappend.asStateFlow()
+    private val _collisionHappened = MutableStateFlow(false)
+    val collisionHappened = _collisionHappened.asStateFlow()
 
     init {
         scope.launch {
-            timerLogic.time.collect {
+            timerLogic.startTimer().collect {
                 val playerRect = playerLogic.player.value.rect
-                val blockRect = blockLogic.block.value.rect
-
-                if (playerRect.overlaps(blockRect)) {
-                    _collisionHappend.value = true
-                    println("COLLISION------------------")
-                } else {
-                    _collisionHappend.value = false
+                val blocks = blockLogic.blocks.value
+                blocks.forEach { block ->
+                    if (playerRect.overlaps(block.rect)) {
+                        _collisionHappened.value = true
+                        println("COLLISION------------------")
+                        //    timerLogic.endGame()
+                    } else {
+                        // TODO() not needed
+                        _collisionHappened.value = false
+                    }
                 }
             }
         }

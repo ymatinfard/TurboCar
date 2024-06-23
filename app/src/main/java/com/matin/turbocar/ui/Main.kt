@@ -15,10 +15,12 @@ import androidx.compose.ui.unit.dp
 import com.matin.turbocar.ui.component.Block
 import com.matin.turbocar.ui.component.Player
 import com.matin.turbocar.ui.engin.gameCoroutineScope
+import com.matin.turbocar.ui.logic.BlockAdderLogic
 import com.matin.turbocar.ui.logic.BlockLogic
 import com.matin.turbocar.ui.logic.PlayerCollisionLogic
 import com.matin.turbocar.ui.logic.PlayerLogic
 import com.matin.turbocar.ui.logic.TimerLogic
+import com.matin.turbocar.ui.model.BlockFactoryProvider
 import com.matin.turbocar.ui.model.ViewPort
 import com.matin.turbocar.ui.model.toPx
 
@@ -30,7 +32,6 @@ fun Main(modifier: Modifier = Modifier) {
         val blockSize = 200.dp.toPx()
         val playerSize = com.matin.turbocar.ui.model.Size(20.dp.toPx(), 20.dp.toPx())
 
-        val timerLogic = remember { TimerLogic() }
         val playerLogic =
             remember {
                 PlayerLogic(
@@ -43,7 +44,7 @@ fun Main(modifier: Modifier = Modifier) {
             remember {
                 BlockLogic(
                     coroutineScope,
-                    timerLogic,
+                    TimerLogic,
                     viewPort,
                     blockSize
                 )
@@ -52,17 +53,27 @@ fun Main(modifier: Modifier = Modifier) {
             PlayerCollisionLogic(
                 playerLogic,
                 blockLogic,
-                timerLogic,
+                TimerLogic,
                 coroutineScope
             )
         }
 
+        val blockAdderLogic = remember {
+            BlockAdderLogic(
+                scope = coroutineScope,
+                blockLogic = blockLogic,
+                viewPort = viewPort,
+                BlockFactoryProvider
+            )
+        }
+
         val playerPosition = playerLogic.player.collectAsState()
-        val blockPosition = blockLogic.block.collectAsState()
+        val blocksPosition = blockLogic.blocks.collectAsState()
         val isCollisionHappened = collisionLogic.collisionHappened.collectAsState()
+        blockAdderLogic.startBlockAdding()
 
         Box(modifier = Modifier.fillMaxSize()) {
-            Block(modifier, blockPosition, Direction.LEFT)
+            Block(modifier, blocksPosition)
             Player(
                 modifier,
                 viewPort,
@@ -76,7 +87,8 @@ fun Main(modifier: Modifier = Modifier) {
 
 enum class Direction(val value: Int) {
     LEFT(-1),
-    RIGHT(1)
+    RIGHT(1),
+    CENTER(0)
 }
 
 @Composable

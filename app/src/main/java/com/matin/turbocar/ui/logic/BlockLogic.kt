@@ -14,8 +14,8 @@ class BlockLogic(
     private val viewPort: ViewPort,
     private val blockSize: Float,
 ) {
-    private val _block = MutableStateFlow(Block(y = 0f, startX = 0f, endX = blockSize))
-    val block = _block.asStateFlow()
+    private val _blocks = MutableStateFlow<List<Block>>(listOf())
+    val blocks = _blocks.asStateFlow()
 
     init {
         blockPosition()
@@ -24,15 +24,29 @@ class BlockLogic(
     private fun blockPosition() {
         var newPosition = 0f
         scope.launch {
-            timerLogic.time.collect {
-                newPosition = _block.value.y + DEFAULT_OFFSET
-                newPosition = if (newPosition > viewPort.height + DEFAULT_OFFSET) 0f else newPosition
-                _block.update { it.copy(y = newPosition) }
+            timerLogic.startTimer().collect {
+                val updatedBlocks = _blocks.value.map { block ->
+                    newPosition = block.y + DEFAULT_OFFSET
+                    block.copy(y = newPosition)
+                }
+                _blocks.value = updatedBlocks
             }
         }
     }
 
+    fun addBlock(block: Block) {
+        _blocks.update {
+            it + block
+        }
+    }
+
+    fun updateBlock(updateBlocks: List<Block>) {
+        _blocks.update {
+            updateBlocks
+        }
+    }
+
     companion object {
-         val DEFAULT_OFFSET = 40f
+        val DEFAULT_OFFSET = 40f
     }
 }
