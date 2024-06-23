@@ -1,9 +1,9 @@
-package com.matin.turbocar.ui.logic
+package com.matin.turbocar.ui.game.logic
 
-import com.matin.turbocar.ui.Direction
-import com.matin.turbocar.ui.model.Player
-import com.matin.turbocar.ui.model.Size
-import com.matin.turbocar.ui.model.ViewPort
+import com.matin.turbocar.ui.game.model.Player
+import com.matin.turbocar.ui.game.model.Size
+import com.matin.turbocar.ui.game.model.ViewPort
+import com.matin.turbocar.ui.game.utils.Direction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

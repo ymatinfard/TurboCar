@@ -1,8 +1,8 @@
-package com.matin.turbocar.ui.model
+package com.matin.turbocar.ui.game.model
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import com.matin.turbocar.ui.Direction
+import com.matin.turbocar.ui.game.utils.Direction
 import java.util.UUID
 
 data class Block(

@@ -1,8 +1,8 @@
-package com.matin.turbocar.ui.logic
+package com.matin.turbocar.ui.game.logic
 
-import com.matin.turbocar.ui.model.Block
-import com.matin.turbocar.ui.model.BlockFactoryProvider
-import com.matin.turbocar.ui.model.ViewPort
+import com.matin.turbocar.ui.game.model.Block
+import com.matin.turbocar.ui.game.model.BlockFactoryProvider
+import com.matin.turbocar.ui.game.model.ViewPort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

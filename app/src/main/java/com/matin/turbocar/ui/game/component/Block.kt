@@ -1,4 +1,4 @@
-package com.matin.turbocar.ui.component
+package com.matin.turbocar.ui.game.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -14,9 +14,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.matin.turbocar.R
-import com.matin.turbocar.ui.Direction
-import com.matin.turbocar.ui.model.Block
-import com.matin.turbocar.ui.toDp
+import com.matin.turbocar.ui.game.component.ext.toDp
+import com.matin.turbocar.ui.game.model.Block
+import com.matin.turbocar.ui.game.utils.Direction
 
 @Composable
 fun Block(modifier: Modifier, blocks: State<List<Block>>) {
