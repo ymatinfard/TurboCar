@@ -1,6 +1,6 @@
 package com.matin.turbocar.ui.component
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,14 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import com.matin.turbocar.R
 import com.matin.turbocar.ui.Direction
 import com.matin.turbocar.ui.logic.PlayerLogic
 import com.matin.turbocar.ui.model.Player
 import com.matin.turbocar.ui.model.ViewPort
-import com.matin.turbocar.ui.toDp
 
 @Composable
 fun Player(
@@ -39,11 +40,11 @@ fun Player(
             },
         contentAlignment = Alignment.BottomCenter
     ) {
-        Box(
+        Image(painter = painterResource(id = R.drawable.car),
             modifier = Modifier
-                .offset { IntOffset(x = player.value.x.toInt(), y = 0) }
-                .size(width = player.value.size.width.toDp(), height = player.value.size.width.toDp())
-                .background(color = if (isCollisionHappened.value) Color.Red else Color.Blue)
+                .size(80.dp, 120.dp)
+                .offset { IntOffset(x = player.value.x.toInt(), y = 0) },
+            contentDescription = null
         )
     }
 }

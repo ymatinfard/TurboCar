@@ -27,7 +27,7 @@ class BlockAdderLogic(
 
             val blocks = blockLogic.blocks.value
 
-            if (blocks.size < 12) {
+            if (blocks.size < 20) {
                 blockLogic.addBlock(createBlock())
             } else {
                 val destructedBlock = blocks.firstOrNull { it.y > viewPort.height }

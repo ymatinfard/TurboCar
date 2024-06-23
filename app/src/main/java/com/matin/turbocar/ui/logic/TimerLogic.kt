@@ -11,7 +11,7 @@ object TimerLogic {
 
     fun startTimer() = flow {
         while (true) {
-            delay(100)
+            delay(40)
             if (gameOver.value) {
                 break
             }
