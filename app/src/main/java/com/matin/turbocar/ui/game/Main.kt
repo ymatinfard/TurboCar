@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import com.matin.turbocar.ui.game.component.Background
 import com.matin.turbocar.ui.game.component.Block
+import com.matin.turbocar.ui.game.component.GameOverMenu
 import com.matin.turbocar.ui.game.component.Player
 import com.matin.turbocar.ui.game.component.ext.toPx
 import com.matin.turbocar.ui.game.di.GameDi
@@ -20,9 +21,10 @@ fun Main(modifier: Modifier = Modifier) {
 
         val player = gameDi.playerLogic.player.collectAsState()
         val blocksPosition = gameDi.blockLogic.blocks.collectAsState()
+        val isGameOver = gameDi.timerLogic.gameOver.collectAsState()
         val isCollisionHappened = gameDi.playerCollisionLogic.collisionHappened.collectAsState()
 
-        Background()
+        Background(isGameOver)
         Block(modifier, blocksPosition)
         Player(
             modifier,
@@ -31,6 +33,10 @@ fun Main(modifier: Modifier = Modifier) {
             player,
             isCollisionHappened,
         )
+
+        if (isGameOver.value) {
+            GameOverMenu(modifier, timerLogic = gameDi.timerLogic)
+        }
     }
 }
 

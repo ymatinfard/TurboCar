@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.asStateFlow
 class PlayerCollisionLogic(
     private val playerLogic: PlayerLogic,
     private val blockLogic: BlockLogic,
-): GameLogic {
+    private val timerLogic: TimerLogic
+): SyncLogic {
     private val _collisionHappened = MutableStateFlow(false)
     val collisionHappened = _collisionHappened.asStateFlow()
 
@@ -17,10 +18,7 @@ class PlayerCollisionLogic(
             if (playerRect.overlaps(block.rect)) {
                 _collisionHappened.value = true
                 println("COLLISION------------------")
-                //    timerLogic.endGame()
-            } else {
-                // TODO() not needed
-                _collisionHappened.value = false
+                    timerLogic.endGame()
             }
         }
     }

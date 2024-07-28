@@ -13,7 +13,7 @@ class PlayerLogic(
     private val scope: CoroutineScope,
     private val viewPort: ViewPort,
     private val size: Size,
-) {
+) : RestartLogic {
     private val screenHalf = viewPort.width / 2
     private val movementEdge = screenHalf * MOVEMENT_EDGE_RATIO
 
@@ -38,5 +38,10 @@ class PlayerLogic(
 
     companion object {
         const val MOVEMENT_EDGE_RATIO = .7f
+        const val INIT_POSITION = 0f
+    }
+
+    override fun onRestart() {
+        _player.update { it.copy(x = INIT_POSITION) }
     }
 }

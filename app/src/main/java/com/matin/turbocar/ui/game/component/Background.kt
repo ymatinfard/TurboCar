@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -22,14 +23,15 @@ import com.matin.turbocar.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun Background() {
+fun Background(isGameOver: State<Boolean>) {
     Box {
         var scrollY by remember {
             mutableFloatStateOf(0f)
         }
 
-        LaunchedEffect(key1 = Unit) {
+        LaunchedEffect(key1 = isGameOver.value) {
             while (true) {
+                if (isGameOver.value) break
                 delay(1)
                 scrollY += 4
             }
