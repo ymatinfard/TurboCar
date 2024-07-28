@@ -1,6 +1,7 @@
 package com.matin.turbocar.ui.game.logic
 
 import android.util.Log
+import com.matin.turbocar.ui.game.utils.gameSpeed
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +20,7 @@ class TimerLogic(private val scope: CoroutineScope) {
 
     fun time() = flow {
         while (true) {
-            delay(40)
+            delay(60 - gameSpeed.toLong())
             if (gameOver.value.not()) {
                 emit(1)
             }

@@ -3,6 +3,7 @@ package com.matin.turbocar.ui.game.logic
 import com.matin.turbocar.ui.game.model.Block
 import com.matin.turbocar.ui.game.model.BlockFactoryProvider
 import com.matin.turbocar.ui.game.model.ViewPort
+import com.matin.turbocar.ui.game.utils.gameSpeed
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +33,7 @@ class BlockAdderLogic(
     }
 
     private suspend fun addBlock() {
-        val randomTime = 2000 + (Random.nextFloat() * 1000).toLong()
+        val randomTime = 700 + (Random.nextFloat() * 1000).toLong() + (300 - gameSpeed * 4)
         delay(randomTime)
 
         val blocks = blockLogic.blocks.value

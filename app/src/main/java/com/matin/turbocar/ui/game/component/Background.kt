@@ -16,19 +16,20 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import com.matin.turbocar.R
+import com.matin.turbocar.ui.game.utils.gameSpeed
 import kotlinx.coroutines.delay
 
 @Composable
 fun Background(isGameOver: State<Boolean>) {
-    
+
     Box {
         var scrollY by remember { mutableFloatStateOf(0f) }
 
         LaunchedEffect(key1 = isGameOver.value) {
             while (true) {
                 if (isGameOver.value) break
-                delay(32) // Approximately 60 FPS for smoother scrolling
-                scrollY += 32f
+                delay(16) // Approximately 60 FPS for smoother scrolling
+                scrollY += gameSpeed
                 // Reset scrollY to prevent overflow
                 if (scrollY >= Float.MAX_VALUE - 1000) scrollY = 0f
             }
@@ -60,19 +61,5 @@ fun Background(isGameOver: State<Boolean>) {
             }
         }
     }
-
-//        val paint = Paint().asFrameworkPaint().apply {
-//            shader = BitmapShader(
-//                imageBitmap.asAndroidBitmap(),
-//                Shader.TileMode.CLAMP,
-//                Shader.TileMode.MIRROR
-//            )
-//        }
-//        Canvas(modifier = Modifier.fillMaxSize()) {
-//            drawIntoCanvas {
-//                it.translate(0f, scrollY)
-//                it.nativeCanvas.drawPaint(paint)
-//            //    it.translate(0f, 0f)
-//            }
-//        }
 }
+
