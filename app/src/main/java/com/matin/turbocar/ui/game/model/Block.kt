@@ -29,10 +29,14 @@ class LeftBlockFactory : BlockFactory {
 class CenterBlockFactory : BlockFactory {
     override fun create(viewPort: ViewPort): Block {
         val blockSize = viewPort.width / 3
+        val centerX = viewPort.width / 2
+        val halfBlockSize = blockSize / 2
+        val startX = centerX - halfBlockSize
+        val endX = centerX + halfBlockSize
         return Block(
             y = 0f,
-            startX = (viewPort.width / 2) - (blockSize / 2),
-            endX = (viewPort.width / 2) + blockSize,
+            startX = startX,
+            endX = endX,
             direction = Direction.CENTER
         )
     }
