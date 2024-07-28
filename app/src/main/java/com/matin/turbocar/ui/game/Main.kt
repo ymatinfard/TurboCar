@@ -1,5 +1,6 @@
 package com.matin.turbocar.ui.game
 
+import Background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -8,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.matin.turbocar.ui.game.component.Background
 import com.matin.turbocar.ui.game.component.Block
 import com.matin.turbocar.ui.game.component.GameMenu
 import com.matin.turbocar.ui.game.component.Player
