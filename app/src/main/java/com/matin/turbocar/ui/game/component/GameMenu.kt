@@ -21,8 +21,9 @@ import com.matin.turbocar.ui.game.logic.TimerLogic
 
 @Preview
 @Composable
-fun GameOverMenu(
+fun GameMenu(
     modifier: Modifier = Modifier,
+    title: String = "Game Over!",
     timerLogic: TimerLogic = TimerLogic(gameCoroutineScope()),
     exitGameClick: () -> Unit = {},
 ) {
@@ -31,12 +32,14 @@ fun GameOverMenu(
             modifier = Modifier.size(width = 300.dp, height = 200.dp),
         ) {
             Column(
-                modifier = modifier.padding(8.dp).fillMaxSize(),
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Game Over!", fontSize = 26.sp, fontWeight = FontWeight.Bold)
+                Text(text = title, fontSize = 26.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(22.dp))
-                TurboButton(text = "Restart",
+                TurboButton(text = if (title == "Start") "Start" else "Restart",
                     onClick = { timerLogic.restartGame() })
                 TurboButton(text = "Exit") {
                     exitGameClick()

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class TimerLogic(private val scope: CoroutineScope) {
-    var gameOver = MutableStateFlow(false)
+    var gameOver = MutableStateFlow(true)
         private set
 
     var restart = MutableSharedFlow<Unit>()
