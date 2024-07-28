@@ -1,5 +1,7 @@
 package com.matin.turbocar.ui.game.component
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -28,6 +31,8 @@ fun Player(
     player: State<Player>,
     isCollisionHappened: State<Boolean>,
 ) {
+    val animateMovement by animateFloatAsState(targetValue = player.value.x, tween(300))
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -43,7 +48,7 @@ fun Player(
         Image(painter = painterResource(id = R.drawable.car),
             modifier = Modifier
                 .size(80.dp, 120.dp)
-                .offset { IntOffset(x = player.value.x.toInt(), y = 0) },
+                .offset { IntOffset(x = animateMovement.toInt(), y = 0) },
             contentDescription = null
         )
     }
