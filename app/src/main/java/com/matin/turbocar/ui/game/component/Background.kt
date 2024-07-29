@@ -20,14 +20,14 @@ import com.matin.turbocar.ui.game.utils.gameSpeed
 import kotlinx.coroutines.delay
 
 @Composable
-fun Background(isGameOver: State<Boolean>) {
+fun Background(isGameOver: Boolean) {
 
     Box {
         var scrollY by remember { mutableFloatStateOf(0f) }
 
-        LaunchedEffect(key1 = isGameOver.value) {
+        LaunchedEffect(key1 = isGameOver) {
             while (true) {
-                if (isGameOver.value) break
+                if (isGameOver) break
                 delay(16) // Approximately 60 FPS for smoother scrolling
                 scrollY += gameSpeed
                 // Reset scrollY to prevent overflow
