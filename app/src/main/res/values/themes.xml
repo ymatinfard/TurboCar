@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.Turbocar" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="Theme.Turbocar.Spalsh" parent="Theme.Turbocar">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+    <style name="Theme.Turbocar.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_turbocar_logo_splash</item>
     </style>
 </resources>
