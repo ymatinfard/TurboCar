@@ -74,7 +74,7 @@ fun BasicInformationalCard(
     Card(
         shape = shape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(.7f)
         ),
         modifier = modifier
             .padding(8.dp),
