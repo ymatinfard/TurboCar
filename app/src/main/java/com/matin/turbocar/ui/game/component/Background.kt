@@ -1,53 +1,65 @@
-package com.matin.turbocar.ui.game.component
-
-import android.graphics.BitmapShader
-import android.graphics.Shader
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import com.matin.turbocar.R
+import com.matin.turbocar.ui.game.utils.gameSpeed
 import kotlinx.coroutines.delay
 
 @Composable
-fun Background() {
-    Box {
-        var scrollY by remember {
-            mutableFloatStateOf(0f)
-        }
+fun Background(isGameOver: Boolean) {
 
-        LaunchedEffect(key1 = Unit) {
+    Box {
+        var scrollY by remember { mutableFloatStateOf(0f) }
+
+        LaunchedEffect(key1 = isGameOver) {
             while (true) {
-                delay(1)
-                scrollY += 4
+                if (isGameOver) break
+                delay(16) // Approximately 60 FPS for smoother scrolling
+                scrollY += gameSpeed
+                // Reset scrollY to prevent overflow
+                if (scrollY >= Float.MAX_VALUE - 1000) scrollY = 0f
             }
         }
 
-        val paint = Paint().asFrameworkPaint().apply {
-            shader = BitmapShader(
-                ImageBitmap.imageResource(id = R.drawable.road).asAndroidBitmap(),
-                Shader.TileMode.REPEAT,
-                Shader.TileMode.MIRROR
-            )
-        }
+        val context = LocalContext.current
+        val imageBitmap = ImageBitmap.imageResource(context.resources, R.drawable.road)
+
         Canvas(modifier = Modifier.fillMaxSize()) {
-            drawIntoCanvas {
-                it.translate(0f, scrollY)
-                it.nativeCanvas.drawPaint(paint)
-                it.translate(0f, 0f)
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+            // Calculate the scale factor to stretch the image to the width of the canvas
+            val scaleFactorX = canvasWidth / imageBitmap.width.toFloat()
+            val scaledImageHeight = imageBitmap.height * scaleFactorX
+
+            // Draw images in a way to cover the canvas height
+            val currentScrollY = scrollY % scaledImageHeight
+
+            for (y in 0..(canvasHeight / scaledImageHeight).toInt() + 1) {
+                val translateY = currentScrollY + y * scaledImageHeight - scaledImageHeight
+                drawIntoCanvas { canvas ->
+                    canvas.save()
+                    canvas.translate(0f, translateY)
+                    canvas.scale(scaleFactorX, scaleFactorX)
+                    canvas.nativeCanvas.drawBitmap(imageBitmap.asAndroidBitmap(), 0f, 0f, null)
+                    canvas.restore()
+                }
             }
         }
     }
 }
+

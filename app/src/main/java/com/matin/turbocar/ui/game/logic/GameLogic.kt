@@ -1,5 +1,9 @@
 package com.matin.turbocar.ui.game.logic
 
-interface GameLogic {
+interface SyncLogic {
     fun onUpdate(time: Int)
+}
+
+interface RestartLogic {
+    fun onRestart()
 }

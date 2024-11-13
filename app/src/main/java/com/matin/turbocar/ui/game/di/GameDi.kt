@@ -17,11 +17,12 @@ class GameDi(viewPort: ViewPort, scope: CoroutineScope) {
 
     val timerLogic = TimerLogic(scope)
     val blockLogic = BlockLogic(viewPort, 550f)
-    val blockAdderLogic = BlockAdderLogic(scope, blockLogic, viewPort, BlockFactoryProvider)
+    val blockAdderLogic = BlockAdderLogic(scope, blockLogic, viewPort, BlockFactoryProvider, timerLogic)
     val playerLogic = PlayerLogic(scope, viewPort, Size(60f, 100f))
-    val playerCollisionLogic = PlayerCollisionLogic(playerLogic, blockLogic)
-    val logics = listOf(blockLogic, playerCollisionLogic)
-    val logicManager = LogicManager(scope, timerLogic, logics)
+    val playerCollisionLogic = PlayerCollisionLogic(playerLogic, blockLogic, timerLogic)
+    val syncLogic = listOf(blockLogic, playerCollisionLogic)
+    val resetLogic = listOf(playerLogic, blockLogic)
+    val logicManager = LogicManager(scope, timerLogic, syncLogic, resetLogic)
 
     init {
         blockAdderLogic.startBlockAdding()

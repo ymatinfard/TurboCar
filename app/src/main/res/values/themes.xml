@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Theme.Turbocar" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Turbocar.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_turbocar_logo_splash</item>
+        <item name="windowSplashScreenBackground">#00677D</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
