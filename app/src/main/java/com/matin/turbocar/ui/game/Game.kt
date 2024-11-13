@@ -22,7 +22,7 @@ import com.matin.turbocar.ui.game.engine.gameCoroutineScope
 import com.matin.turbocar.ui.game.model.ViewPort
 
 @Composable
-fun Main(modifier: Modifier = Modifier) {
+fun Game(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val mediaPlayer = remember {
         MediaPlayer.create(context, R.raw.racing).apply {
